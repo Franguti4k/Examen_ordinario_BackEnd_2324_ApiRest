@@ -72,8 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
   } else if (method === "PUT") {
     if(path === "/contact"){
       const contact:Contact = await req.json()
-      console.info(contact.name)
-      if(!contact.id && !contact.name && contact.phone) return new Response("Bad Request", {status:400})
+      if((!contact.id && !contact.name && !contact.phone) ||(contact.id && !contact.name && !contact.phone) ) return new Response("Bad Request", {status:400})
       if(!contact.phone){
         const newContact = await ContactCollection.findOneAndUpdate({_id: new ObjectId(contact.id)},{$set:{name:contact.name}})
         if(!newContact) return new Response("Cotact not found", {status:404})
